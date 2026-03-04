@@ -7,4 +7,5 @@ catboost
 joblib
 streamlit
 lightgbm
+dill
 #-e .
