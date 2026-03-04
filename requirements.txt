@@ -3,4 +3,8 @@ seaborn
 matplotlib
 scikit-learn
 numpy
--e .
+catboost
+joblib
+streamlit
+lightgbm
+#-e .
