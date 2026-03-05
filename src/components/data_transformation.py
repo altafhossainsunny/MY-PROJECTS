@@ -4,8 +4,7 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
-from src.components.data_ingestion import DataIngestion
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, LabelEncoder
 from src.exception import CustomException
 from src.logger import logging
 from src.utils import save_object
@@ -65,12 +64,14 @@ class DataTransformation:
             input_feature_train_arr = preprocessor_obj.fit_transform(input_feature_train_df)
             input_feature_test_arr  = preprocessor_obj.transform(input_feature_test_df)
 
-            train_arr = np.c_[
-                input_feature_train_arr, np.array(target_feature_train_df)
-            ]
-            test_arr = np.c_[
-                input_feature_test_arr, np.array(target_feature_test_df)
-            ]
+            label_encoder = LabelEncoder()
+            target_train_encoded = label_encoder.fit_transform(np.array(target_feature_train_df))
+            target_test_encoded  = label_encoder.transform(np.array(target_feature_test_df))
+
+            logging.info(f"Label classes: {label_encoder.classes_}")
+
+            train_arr = np.c_[input_feature_train_arr, target_train_encoded]
+            test_arr  = np.c_[input_feature_test_arr,  target_test_encoded]
             logging.info("Saved preprocessing object.")
 
             save_object(
@@ -88,6 +89,7 @@ class DataTransformation:
             raise CustomException(e, sys)
 
 if __name__ == "__main__":
+    from src.components.data_ingestion import DataIngestion
     obj = DataIngestion()
     train_data, test_data = obj.initiate_data_ingestion()
 
