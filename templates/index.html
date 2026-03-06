@@ -11,13 +11,26 @@
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex; flex-direction: column; align-items: center;
-            padding: 50px 20px 0;
+            display: flex; flex-direction: column; align-items: flex-start;
+            padding: 50px 40px 0;
         }
-        .container { max-width: 880px; width: 100%; flex: 1; padding-bottom: 40px; }
+        .container { max-width: 1100px; width: 100%; flex: 1; padding-bottom: 40px; }
+
+        /* Hero split layout */
+        .hero-split { display: flex; align-items: flex-start; gap: 48px; margin-bottom: 44px; }
+        .hero-left { flex: 1; min-width: 0; }
+        .hero-right { flex: 1; min-width: 0; }
+        @media (max-width: 780px) { .hero-split { flex-direction: column; } }
+        .about-inline { margin-top: 28px; }
+        .about-inline .about-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .about-inline .avatar { width: 56px; height: 56px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.4); }
+        .about-inline .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .about-inline .about-name { color: white; font-size: 1.05rem; font-weight: 700; }
+        .about-inline .about-role { color: rgba(255,255,255,0.6); font-size: 0.78rem; margin-top: 2px; font-weight: 300; }
+        .about-inline .about-bio { color: rgba(255,255,255,0.82); font-size: 0.88rem; line-height: 1.75; font-weight: 300; margin-bottom: 18px; }
 
         /* Hero */
-        .hero { text-align: left; margin-bottom: 44px; }
+        .hero { text-align: left; }
         .badge {
             display: inline-block;
             background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
@@ -88,7 +101,8 @@
         .section-label { color: rgba(255,255,255,0.6); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 16px; text-align: left; }
 
         /* Project cards */
-        .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 44px; }
+        .cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 0; }
+        .cards-standalone { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 44px; }
         @media (max-width: 600px) {
             .cards { grid-template-columns: 1fr; }
             .hero h1 { font-size: 2rem; }
@@ -122,40 +136,69 @@
 <body>
     <div class="container">
 
-        <!-- Hero -->
-        <div class="hero">
-            <div class="badge">&#128300; ML Portfolio</div>
-            <h1>Building Systems That<br><span>Predict the Future.</span></h1>
-            <p class="hero-sub">Machine Learning &bull; IoT &bull; Real-World Impact</p>
-        </div>
-
-        <!-- About -->
-        <div class="about-card">
-            <div class="about-header">
-                <div class="avatar">&#129489;&#8205;&#128187;</div>
-                <div>
-                    <div class="about-name">MD ALTAF HOSSAIN SUNNY</div>
-                    <div class="about-role">AI/ML Developer &bull; Student Researcher &bull; ML Engineer</div>
+        <!-- Hero + Projects side by side -->
+        <div class="hero-split">
+            <div class="hero-left">
+                <div class="hero">
+                    <div class="badge">&#128300; ML Portfolio</div>
+                    <h1>Building Systems That<br><span>Predict the Future.</span></h1>
+                    <p class="hero-sub">Machine Learning &bull; IoT &bull; Real-World Impact</p>
+                </div>
+                <div class="about-inline">
+                    <div class="about-header">
+                        <div class="avatar"><img src="/static/images/image.png" alt="MD ALTAF HOSSAIN SUNNY"></div>
+                        <div>
+                            <div class="about-name">MD ALTAF HOSSAIN SUNNY</div>
+                            <div class="about-role">AI/ML Developer &bull; Student Researcher &bull; ML Engineer</div>
+                        </div>
+                    </div>
+                    <p class="about-bio">
+                        I&rsquo;m an AI/ML Developer and student researcher with a bachelor&rsquo;s degree in Data Science. My work centers on
+                        machine learning for time series prediction &mdash; with applications in flood forecasting and machine
+                        failure detection. I&rsquo;m passionate about building reproducible pipelines, experimenting with
+                        advanced encoding strategies, and exploring frontier IoT domains that push beyond conventional boundaries.
+                        I actively share projects and code on GitHub, with a vision to bridge data science and real-world systems
+                        into solutions that are both innovative and transformative.
+                    </p>
+                    <div class="bullets">
+                        <div class="bullets-label">What I Do</div>
+                        <ul>
+                            <li>Develop ML models for predictive analytics in environmental and industrial systems</li>
+                            <li>Design scalable, reproducible workflows for data preprocessing and feature engineering</li>
+                            <li>Translate complex technical insights into clear, actionable outcomes for diverse stakeholders</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <p class="about-bio">
-                I&rsquo;m an AI/ML Developer and student researcher with a bachelor&rsquo;s degree in Data Science. My work centers on
-                machine learning for time series prediction &mdash; with applications in flood forecasting and machine
-                failure detection. I&rsquo;m passionate about building reproducible pipelines, experimenting with
-                advanced encoding strategies, and exploring frontier IoT domains that push beyond conventional boundaries.
-                I actively share projects and code on GitHub, with a vision to bridge data science and real-world systems
-                into solutions that are both innovative and transformative.
-            </p>
-
-            <div class="bullets">
-                <div class="bullets-label">What I Do</div>
-                <ul>
-                    <li>Develop ML models for predictive analytics in environmental and industrial systems</li>
-                    <li>Design scalable, reproducible workflows for data preprocessing and feature engineering</li>
-                    <li>Translate complex technical insights into clear, actionable outcomes for diverse stakeholders</li>
-                </ul>
+            <div class="hero-right">
+                <div class="section-label">&#9679; Projects</div>
+                <div class="cards">
+                    <a href="/predictdata" class="project-card">
+                        <div class="card-icon">&#127891;</div>
+                        <span class="card-tag tag-student">Education</span>
+                        <div class="card-title">Student Performance</div>
+                        <div class="card-desc">Predict a student's academic outcome &mdash; Fail, Good, Excellent, or Outstanding &mdash; based on demographic and background factors.</div>
+                        <div class="card-footer">
+                            <span class="card-model">GradientBoosting &bull; 64% Acc</span>
+                            <span class="arrow">&#8594;</span>
+                        </div>
+                    </a>
+                    <a href="/maintenance" class="project-card">
+                        <div class="card-icon">&#9881;</div>
+                        <span class="card-tag tag-industry">Industry</span>
+                        <div class="card-title">Predictive Maintenance</div>
+                        <div class="card-desc">Detect equipment failure before it happens using 9 sensor readings including temperature, air quality, and current load.</div>
+                        <div class="card-footer">
+                            <span class="card-model">CatBoost &bull; 88% Acc</span>
+                            <span class="arrow">&#8594;</span>
+                        </div>
+                    </a>
+                </div>
             </div>
+        </div>
 
+        <!-- Skills -->
+        <div class="about-card" style="margin-bottom: 28px;">
             <div class="skills-label">Skills</div>
             <div class="skills">
                 <span class="skill-chip">Python</span>
@@ -167,32 +210,8 @@
                 <span class="skill-chip">Machine Learning</span>
                 <span class="skill-chip">Time Series</span>
                 <span class="skill-chip">IoT</span>
+                <span class="skill-chip">Docker</span>
             </div>
-
-        </div>
-
-        <div class="section-label">&#9679; Projects</div>
-        <div class="cards">
-            <a href="/predictdata" class="project-card">
-                <div class="card-icon">&#127891;</div>
-                <span class="card-tag tag-student">Education</span>
-                <div class="card-title">Student Performance</div>
-                <div class="card-desc">Predict a student's academic outcome &mdash; Fail, Good, Excellent, or Outstanding &mdash; based on demographic and background factors.</div>
-                <div class="card-footer">
-                    <span class="card-model">GradientBoosting &bull; 64% Acc</span>
-                    <span class="arrow">&#8594;</span>
-                </div>
-            </a>
-            <a href="/maintenance" class="project-card">
-                <div class="card-icon">&#9881;</div>
-                <span class="card-tag tag-industry">Industry</span>
-                <div class="card-title">Predictive Maintenance</div>
-                <div class="card-desc">Detect equipment failure before it happens using 9 sensor readings including temperature, air quality, and current load.</div>
-                <div class="card-footer">
-                    <span class="card-model">CatBoost &bull; 88% Acc</span>
-                    <span class="arrow">&#8594;</span>
-                </div>
-            </a>
         </div>
 
         <!-- Stats -->
