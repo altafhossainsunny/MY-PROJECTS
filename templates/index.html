@@ -3,157 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML Prediction Hub</title>
+    <title>MD Altaf Hossain Sunny — ML Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 50px 20px;
         }
+        .container { max-width: 880px; width: 100%; }
 
-        .container { max-width: 860px; width: 100%; text-align: center; }
-
+        /* Hero */
+        .hero { text-align: center; margin-bottom: 44px; }
         .badge {
             display: inline-block;
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.4);
-            color: white;
-            padding: 6px 18px;
-            border-radius: 50px;
-            font-size: 13px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 24px;
+            background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
+            color: white; padding: 6px 18px; border-radius: 50px;
+            font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px;
         }
+        .hero h1 { font-size: 2.8rem; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .hero h1 span { color: #ffd700; }
+        .hero-sub { color: rgba(255,255,255,0.8); font-size: 1rem; font-weight: 300; }
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            color: white;
-            line-height: 1.2;
-            margin-bottom: 14px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        /* About card */
+        .about-card {
+            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 20px; padding: 32px 36px; margin-bottom: 28px;
         }
-
-        h1 span { color: #ffd700; }
-
-        .tagline {
-            color: rgba(255,255,255,0.85);
-            font-size: 1.1rem;
-            font-weight: 300;
-            margin-bottom: 50px;
+        .about-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+        .avatar {
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, #ffd700, #ff9500);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; flex-shrink: 0;
         }
-
-        .cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 50px;
+        .about-name { color: white; font-size: 1.15rem; font-weight: 700; }
+        .about-role { color: rgba(255,255,255,0.65); font-size: 0.82rem; margin-top: 2px; font-weight: 300; }
+        .about-bio { color: rgba(255,255,255,0.88); font-size: 0.92rem; line-height: 1.75; font-weight: 300; margin-bottom: 22px; }
+        .skills-label { color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 10px; }
+        .skills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+        .skill-chip {
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+            color: white; font-size: 0.78rem; font-weight: 500; padding: 5px 14px; border-radius: 50px;
+            transition: background 0.2s;
         }
+        .skill-chip:hover { background: rgba(255,255,255,0.25); }
 
-        @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+        /* Contact */
+        .contact-label { color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 10px; }
+        .contact-links { display: flex; flex-wrap: wrap; gap: 10px; }
+        .contact-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 9px 18px; border-radius: 50px;
+            font-size: 0.82rem; font-weight: 600; text-decoration: none;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .contact-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn-email     { background: white;   color: #764ba2; }
+        .btn-whatsapp  { background: #25D366; color: white; }
+        .btn-github    { background: #24292e; color: white; }
+        .btn-linkedin  { background: #0A66C2; color: white; }
+        .bullets { margin-bottom: 22px; }
+        .bullets-label { color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 10px; }
+        .bullets ul { list-style: none; padding: 0; }
+        .bullets ul li { color: rgba(255,255,255,0.85); font-size: 0.88rem; font-weight: 300; line-height: 1.6; padding: 4px 0 4px 18px; position: relative; }
+        .bullets ul li::before { content: '92'; position: absolute; left: 0; color: #ffd700; font-weight: 700; }
 
+        /* Section label */
+        .section-label { color: rgba(255,255,255,0.6); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 16px; text-align: center; }
+
+        /* Project cards */
+        .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 44px; }
+        @media (max-width: 600px) {
+            .cards { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2rem; }
+            .about-card { padding: 24px 20px; }
+            .contact-links { flex-direction: column; }
+        }
         .project-card {
-            background: white;
-            border-radius: 20px;
-            padding: 36px 28px;
-            text-decoration: none;
-            text-align: left;
+            background: white; border-radius: 20px; padding: 32px 26px;
+            text-decoration: none; text-align: left;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            transition: transform 0.25s, box-shadow 0.25s;
-            display: block;
+            transition: transform 0.25s, box-shadow 0.25s; display: block;
         }
-
-        .project-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
-
-        .card-icon { font-size: 2.8rem; margin-bottom: 16px; }
-
-        .card-tag {
-            display: inline-block;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 3px 10px;
-            border-radius: 50px;
-            margin-bottom: 10px;
-        }
-
+        .project-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .card-icon { font-size: 2.6rem; margin-bottom: 14px; }
+        .card-tag { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: 50px; margin-bottom: 10px; }
         .tag-student  { background: #ede9fe; color: #7c3aed; }
         .tag-industry { background: #fef3c7; color: #b45309; }
+        .card-title { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+        .card-desc { font-size: 0.86rem; color: #888; line-height: 1.6; font-weight: 300; margin-bottom: 20px; }
+        .card-footer { display: flex; align-items: center; justify-content: space-between; }
+        .card-model { font-size: 0.76rem; font-weight: 600; color: #aaa; }
+        .arrow { font-size: 1.2rem; font-weight: 700; color: #764ba2; }
 
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 8px;
-        }
-
-        .card-desc {
-            font-size: 0.88rem;
-            color: #888;
-            line-height: 1.6;
-            font-weight: 300;
-            margin-bottom: 20px;
-        }
-
-        .card-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .card-model {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: #aaa;
-        }
-
-        .arrow {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #764ba2;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            flex-wrap: wrap;
-        }
-
+        /* Stats */
+        .stats { display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; }
+        .stat { text-align: center; }
         .stat-number { font-size: 2rem; font-weight: 800; color: #ffd700; }
-        .stat-label  { font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.65); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="badge">&#127916; ML Prediction Hub</div>
-        <h1>Two Models.<br><span>One Platform.</span></h1>
-        <p class="tagline">Choose a prediction module below to get started</p>
 
+        <!-- Hero -->
+        <div class="hero">
+            <div class="badge">&#128300; ML Portfolio</div>
+            <h1>Building Systems That<br><span>Predict the Future.</span></h1>
+            <p class="hero-sub">Machine Learning &bull; IoT &bull; Real-World Impact</p>
+        </div>
+
+        <!-- About -->
+        <div class="about-card">
+            <div class="about-header">
+                <div class="avatar">&#129489;&#8205;&#128187;</div>
+                <div>
+                    <div class="about-name">MD Altaf Hossain Sunny</div>
+                    <div class="about-role">Student Researcher &bull; ML Engineer</div>
+                </div>
+            </div>
+            <p class="about-bio">
+                I&rsquo;m a student researcher with a bachelor&rsquo;s degree in Data Science. My work centers on
+                machine learning for time series prediction &mdash; with applications in flood forecasting and machine
+                failure detection. I&rsquo;m passionate about building reproducible pipelines, experimenting with
+                advanced encoding strategies, and exploring frontier IoT domains that push beyond conventional boundaries.
+                I actively share projects and code on GitHub, with a vision to bridge data science and real-world systems
+                into solutions that are both innovative and transformative.
+            </p>
+
+            <div class="bullets">
+                <div class="bullets-label">What I Do</div>
+                <ul>
+                    <li>Develop ML models for predictive analytics in environmental and industrial systems</li>
+                    <li>Design scalable, reproducible workflows for data preprocessing and feature engineering</li>
+                    <li>Translate complex technical insights into clear, actionable outcomes for diverse stakeholders</li>
+                </ul>
+            </div>
+
+            <div class="skills-label">Skills</div>
+            <div class="skills">
+                <span class="skill-chip">Python</span>
+                <span class="skill-chip">SQL</span>
+                <span class="skill-chip">HTML</span>
+                <span class="skill-chip">CSS (Vanilla)</span>
+                <span class="skill-chip">Java</span>
+                <span class="skill-chip">C</span>
+                <span class="skill-chip">Machine Learning</span>
+                <span class="skill-chip">Time Series</span>
+                <span class="skill-chip">IoT</span>
+            </div>
+
+            <div class="contact-label">Let&rsquo;s Connect</div>
+            <div class="contact-links">
+                <a href="mailto:altafhossainsunny1552@gmail.com" class="contact-btn btn-email">
+                    &#9993; Email
+                </a>
+                <a href="https://wa.me/60198982147" target="_blank" class="contact-btn btn-whatsapp">
+                    &#128241; WhatsApp
+                </a>
+                <a href="https://github.com/altafhossainsunny" target="_blank" class="contact-btn btn-github">
+                    &#128025; GitHub
+                </a>
+                <a href="https://linkedin.com/in/md-altaf-hossain-sunny-4b81a4296" target="_blank" class="contact-btn btn-linkedin">
+                    &#128101; LinkedIn
+                </a>
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="section-label">&#9679; Projects</div>
         <div class="cards">
             <a href="/predictdata" class="project-card">
                 <div class="card-icon">&#127891;</div>
                 <span class="card-tag tag-student">Education</span>
                 <div class="card-title">Student Performance</div>
-                <div class="card-desc">Predict a student's academic outcome — Fail, Good, Excellent, or Outstanding — based on demographic and background factors.</div>
+                <div class="card-desc">Predict a student's academic outcome &mdash; Fail, Good, Excellent, or Outstanding &mdash; based on demographic and background factors.</div>
                 <div class="card-footer">
                     <span class="card-model">GradientBoosting &bull; 64% Acc</span>
                     <span class="arrow">&#8594;</span>
                 </div>
             </a>
-
             <a href="/maintenance" class="project-card">
                 <div class="card-icon">&#9881;</div>
                 <span class="card-tag tag-industry">Industry</span>
@@ -166,149 +199,14 @@
             </a>
         </div>
 
+        <!-- Stats -->
         <div class="stats">
-            <div class="stat">
-                <div class="stat-number">2</div>
-                <div class="stat-label">ML Models</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">1000+</div>
-                <div class="stat-label">Training Samples</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">10+</div>
-                <div class="stat-label">Algorithms Tested</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">Live</div>
-                <div class="stat-label">Predictions</div>
-            </div>
+            <div class="stat"><div class="stat-number">2</div><div class="stat-label">ML Models</div></div>
+            <div class="stat"><div class="stat-number">1000+</div><div class="stat-label">Training Samples</div></div>
+            <div class="stat"><div class="stat-number">10+</div><div class="stat-label">Algorithms Tested</div></div>
+            <div class="stat"><div class="stat-number">Live</div><div class="stat-label">Predictions</div></div>
         </div>
-    </div>
-</body>
-</html>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero {
-            text-align: center;
-            color: white;
-            padding: 40px 20px;
-            max-width: 700px;
-        }
-
-        .badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.4);
-            color: white;
-            padding: 6px 18px;
-            border-radius: 50px;
-            font-size: 13px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-
-        h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        h1 span { color: #ffd700; }
-
-        p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            line-height: 1.7;
-            margin-bottom: 40px;
-            font-weight: 300;
-        }
-
-        .btn {
-            display: inline-block;
-            background: white;
-            color: #764ba2;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            padding: 16px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-        }
-
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 60px;
-            flex-wrap: wrap;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #ffd700;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            opacity: 0.75;
-            margin-top: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-    </style>
-</head>
-<body>
-    <div class="hero">
-        <div class="badge">&#127891; AI-Powered</div>
-        <h1>Student Performance <span>Predictor</span></h1>
-        <p>Predict a student's academic performance using machine learning.<br>
-           Powered by GradientBoosting trained on real student data.</p>
-        <a href="/predictdata" class="btn">&#9889; Start Prediction</a>
-
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-number">1000</div>
-                <div class="stat-label">Students Trained</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">64%</div>
-                <div class="stat-label">Model Accuracy</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">4</div>
-                <div class="stat-label">Performance Classes</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">10</div>
-                <div class="stat-label">Models Evaluated</div>
-            </div>
-        </div>
     </div>
 </body>
 </html>
