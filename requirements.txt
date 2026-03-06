@@ -5,7 +5,8 @@ scikit-learn
 numpy
 catboost
 joblib
-streamlit
 lightgbm
 dill
+flask
+gunicorn
 #-e .

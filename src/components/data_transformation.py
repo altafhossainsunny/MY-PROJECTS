@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, LabelEncoder
+from imblearn.over_sampling import SMOTE
 from src.exception import CustomException
 from src.logger import logging
 from src.utils import save_object
@@ -69,6 +70,14 @@ class DataTransformation:
             target_test_encoded  = label_encoder.transform(np.array(target_feature_test_df))
 
             logging.info(f"Label classes: {label_encoder.classes_}")
+            logging.info(f"Class distribution before SMOTE: {dict(zip(*np.unique(target_train_encoded, return_counts=True)))}")
+
+            # Apply SMOTE to balance training classes
+            smote = SMOTE(random_state=42)
+            input_feature_train_arr, target_train_encoded = smote.fit_resample(
+                input_feature_train_arr, target_train_encoded
+            )
+            logging.info(f"Class distribution after SMOTE: {dict(zip(*np.unique(target_train_encoded, return_counts=True)))}")
 
             train_arr = np.c_[input_feature_train_arr, target_train_encoded]
             test_arr  = np.c_[input_feature_test_arr,  target_test_encoded]

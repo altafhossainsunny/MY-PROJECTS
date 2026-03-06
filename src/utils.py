@@ -25,16 +25,18 @@ def save_object(file_path, obj):
     
 def evaluate_model(X, y, X_test, y_test, models):
     try:
-        report = {}
-        for i in range(len(models)):
-            model_name = list(models.keys())[i]
-            model = list(models.values())[i]
-            model.fit(X, y)
+        # Cast to int to avoid float label issues with XGBoost / AdaBoost
+        y      = y.astype(int)
+        y_test = y_test.astype(int)
 
+        report = {}
+        for model_name, model in models.items():
+            model.fit(X, y)
             y_test_pred = model.predict(X_test)
             accuracy = accuracy_score(y_test, y_test_pred)
-
-            report[model_name] = accuracy
+            f1       = f1_score(y_test, y_test_pred, average='weighted')
+            report[model_name] = {"accuracy": accuracy, "f1": f1}
+            print(f"  {model_name:30s} Accuracy={accuracy:.4f}  MacroF1={f1:.4f}")
 
         return report
 

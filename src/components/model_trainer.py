@@ -8,13 +8,10 @@ from sklearn.ensemble import (RandomForestClassifier,
                               AdaBoostClassifier)
 from sklearn.neighbors import KNeighborsClassifier
 from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
 from catboost import CatBoostClassifier
 from sklearn.metrics import (accuracy_score,
-                             classification_report,
-                             confusion_matrix,
-                             roc_auc_score,
-                             f1_score,
-                             precision_score)
+                             f1_score)
 import sys
 import os
 from dataclasses import dataclass
@@ -41,30 +38,39 @@ class ModelTrainer:
             )
 
             models = {
-                "Logistic Regression": LogisticRegression(),
-                "Decision Tree": DecisionTreeClassifier(),
-                "Random Forest": RandomForestClassifier(),
-                "Gradient Boosting": GradientBoostingClassifier(),
-                "AdaBoost": AdaBoostClassifier(),
-                "K-Nearest Neighbors": KNeighborsClassifier(),
-                "XGBoost": XGBClassifier(),
-                "CatBoost": CatBoostClassifier(verbose=0)
+                "Logistic Regression":  LogisticRegression(class_weight='balanced'),
+                "SVM":                  SVC(class_weight='balanced'),
+                "K-Nearest Neighbors":  KNeighborsClassifier(),
+                "Decision Tree":        DecisionTreeClassifier(class_weight='balanced'),
+                "Random Forest":        RandomForestClassifier(class_weight='balanced'),
+                "Gradient Boosting":    GradientBoostingClassifier(),
+                "AdaBoost":             AdaBoostClassifier(),
+                "XGBoost":              XGBClassifier(scale_pos_weight=1),
+                "LightGBM":             LGBMClassifier(verbose=-1),
+                "CatBoost":             CatBoostClassifier(verbose=0)
             }
 
             model_report = evaluate_model(X=X_train, y=y_train, X_test=X_test, y_test=y_test, models=models)
 
-            # Fixed: list(model_report.values()) is a list, use np.argmax directly
-            best_model_name = list(model_report.keys())[
-                np.argmax(list(model_report.values()))
-            ]
+            # Log all model scores for transparency
+            logging.info("=== Model Evaluation Report ===")
+            for name, scores in model_report.items():
+                logging.info(f"  {name}: Accuracy={scores['accuracy']:.4f}, F1={scores['f1']:.4f}")
+            print("\n=== Model Evaluation Report ===")
+            for name, scores in model_report.items():
+                print(f"  {name:30s} Accuracy={scores['accuracy']:.4f}  F1={scores['f1']:.4f}")
+
+            # Select best model by macro F1 (handles class imbalance better than accuracy)
+            best_model_name = max(model_report, key=lambda k: model_report[k]['f1'])
             best_model = models[best_model_name]
 
-            predicted = best_model.predict(X_test)
-            accuracy = accuracy_score(y_test, predicted)
-            f1 = f1_score(y_test, predicted, average='weighted')
+            accuracy = model_report[best_model_name]['accuracy']
+            f1       = model_report[best_model_name]['f1']
+
+            print(f"\nBest Model: {best_model_name} | Accuracy={accuracy:.4f} | F1={f1:.4f}")
 
             if accuracy > 0.6 and f1 > 0.3:
-                logging.info(f"Best model found: {best_model_name} with Accuracy: {accuracy:.4f} and F1 Score: {f1:.4f}")
+                logging.info(f"Best model selected: {best_model_name} | Accuracy={accuracy:.4f} | F1={f1:.4f}")
             else:
                 raise CustomException("No suitable model found with required performance metrics.", sys)
 

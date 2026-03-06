@@ -1,0 +1,35 @@
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Jupyter notebooks & raw data (not needed at runtime)
+notebook/
+
+# Logs
+logs/
+*.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Build / egg info
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# OS
+.DS_Store
+Thumbs.db
