@@ -3,220 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Performance Prediction</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Student Performance Predictor | Altaf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 30px 20px;
+        :root {
+            --bg: #000; --card: #0a0a0a; --primary: #0ea5e9;
+            --secondary: #1a1a1a; --border: rgba(14,165,233,0.2);
+            --border-dim: rgba(255,255,255,0.06); --muted: #a0a0a0;
+            --fg: #fff; --radius: 0.75rem;
         }
+        *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 99px; }
 
-        .card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 560px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+        /* NAV */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
         }
+        .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 2rem; }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), #2563eb); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 800; color: #000; }
+        .nav-logo-text { font-size: 0.9rem; font-weight: 600; color: var(--fg); }
+        .nav-links { display: flex; gap: 2px; }
+        .nav-links a { padding: 7px 16px; border-radius: 6px; font-size: 0.875rem; color: var(--muted); text-decoration: none; transition: all 0.2s; }
+        .nav-links a:hover { color: var(--fg); background: var(--secondary); }
+        .nav-links a.active { color: var(--primary); background: rgba(14,165,233,0.1); }
 
-        .card-header { text-align: center; margin-bottom: 32px; }
-        .icon { font-size: 3rem; margin-bottom: 10px; }
+        /* REVEAL */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.55s ease, transform 0.55s ease; }
+        .reveal.visible { opacity: 1; transform: none; }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
 
-        h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 6px;
-        }
+        /* PAGE LAYOUT */
+        .page-wrap { flex: 1; max-width: 1100px; margin: 0 auto; width: 100%; padding: 4rem 2rem; }
+        .page-grid { display: grid; grid-template-columns: 1fr 380px; gap: 3.5rem; align-items: start; }
+        @media (max-width: 900px) { .page-grid { grid-template-columns: 1fr; } }
 
-        .subtitle { color: #888; font-size: 0.9rem; font-weight: 300; }
+        /* PAGE HEADER */
+        .page-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(14,165,233,0.08); border: 1px solid var(--border); color: var(--primary); padding: 5px 16px; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 1rem; }
+        .page-title { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 800; line-height: 1.15; margin-bottom: 0.75rem; }
+        .page-title span { background: linear-gradient(90deg, var(--primary), #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .page-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.8; font-weight: 300; margin-bottom: 2rem; }
 
-        .form-group { margin-bottom: 18px; }
-
-        label {
-            display: block;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #555;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
+        /* FORM CARD */
+        .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; overflow: hidden; }
+        .form-card-top { height: 3px; background: linear-gradient(90deg, var(--primary), #2563eb); }
+        .form-card-body { padding: 2rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 7px; }
         select {
-            width: 100%;
-            padding: 12px 16px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            color: #333;
-            background: #f8f9ff;
-            border: 2px solid #e8e8f0;
-            border-radius: 10px;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            cursor: pointer;
+            width: 100%; padding: 11px 16px;
+            font-family: 'Inter', sans-serif; font-size: 0.9rem;
+            color: var(--fg); background: var(--secondary);
+            border: 1px solid var(--border-dim); border-radius: 8px;
+            appearance: none; -webkit-appearance: none; cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230ea5e9' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 14px center;
+            background-color: var(--secondary); padding-right: 36px;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+        select option { background: #1a1a1a; color: var(--fg); }
+        select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(14,165,233,0.15); background-color: var(--secondary); }
+        .btn-submit { width: 100%; padding: 13px; background: var(--primary); color: #000; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 800; border: none; border-radius: 8px; cursor: pointer; margin-top: 0.5rem; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s; letter-spacing: 0.2px; }
+        .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(14,165,233,0.3); }
 
-        select:focus {
-            outline: none;
-            border-color: #764ba2;
-            box-shadow: 0 0 0 3px rgba(118,75,162,0.15);
-            background-color: white;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: opacity 0.2s, transform 0.2s;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-submit:hover { opacity: 0.92; transform: translateY(-1px); }
-
-        .result-box {
-            margin-top: 24px;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .result-fail        { background: #fff0f0; color: #c0392b; border: 2px solid #f5c6cb; }
-        .result-good        { background: #f0f7ff; color: #2874a6; border: 2px solid #bee3f8; }
-        .result-excellent   { background: #f0fff4; color: #1e8449; border: 2px solid #c3e6cb; }
-        .result-outstanding { background: #fffbf0; color: #b7950b; border: 2px solid #ffeeba; }
-        .result-default     { background: #f8f0ff; color: #764ba2; border: 2px solid #e2caff; }
-
-        .result-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.7;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
+        /* RESULT */
+        .result-box { margin-top: 1.5rem; padding: 1.5rem; border-radius: 10px; text-align: center; animation: fadeIn 0.4s ease; }
+        .result-fail        { background: rgba(244,63,94,0.06); border: 1px solid rgba(244,63,94,0.3); }
+        .result-good        { background: rgba(14,165,233,0.06); border: 1px solid rgba(14,165,233,0.3); }
+        .result-excellent   { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.3); }
+        .result-outstanding { background: rgba(250,204,21,0.06); border: 1px solid rgba(250,204,21,0.3); }
+        .result-default     { background: rgba(14,165,233,0.06); border: 1px solid var(--border); }
+        .result-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 700; margin-bottom: 6px; }
+        .result-emoji { font-size: 2.5rem; line-height: 1; margin-bottom: 6px; }
         .result-value { font-size: 1.8rem; font-weight: 800; }
+        .result-fail        .result-value { color: #f43f5e; }
+        .result-good        .result-value { color: var(--primary); }
+        .result-excellent   .result-value { color: #22c55e; }
+        .result-outstanding .result-value { color: #facc15; }
+        .result-default     .result-value { color: var(--primary); }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 1.5rem; color: var(--muted); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
+        .back-link:hover { color: var(--primary); }
 
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #888;
-            font-size: 0.85rem;
-            text-decoration: none;
-        }
+        /* SIDEBAR */
+        .sidebar-card { background: var(--card); border: 1px solid var(--border-dim); border-radius: 1rem; padding: 1.75rem; margin-bottom: 1.25rem; }
+        .sidebar-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 1rem; }
+        .outcome-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-dim); }
+        .outcome-item:last-child { border-bottom: none; }
+        .outcome-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .dot-fail { background: #f43f5e; }
+        .dot-good { background: var(--primary); }
+        .dot-excellent { background: #22c55e; }
+        .dot-outstanding { background: #facc15; }
+        .outcome-name { font-size: 0.88rem; font-weight: 600; color: var(--fg); }
+        .outcome-desc { font-size: 0.75rem; color: var(--muted); margin-top: 1px; font-weight: 300; }
+        .tip-item { display: flex; gap: 10px; padding: 8px 0; font-size: 0.82rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+        .tip-item::before { content: '▸'; color: var(--primary); flex-shrink: 0; padding-top: 1px; }
+        .nav-card-link { display: block; padding: 12px 16px; border-radius: 8px; background: var(--secondary); border: 1px solid var(--border-dim); text-decoration: none; color: var(--muted); font-size: 0.85rem; font-weight: 500; transition: all 0.2s; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+        .nav-card-link:hover { border-color: var(--primary); color: var(--primary); }
+        .nav-card-link span { font-size: 0.75rem; opacity: 0.5; }
 
-        .back-link:hover { color: #764ba2; }
+        /* FOOTER */
+        footer { border-top: 1px solid var(--border-dim); padding: 1.5rem 2rem; text-align: center; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .footer-logo { display: flex; align-items: center; gap: 10px; }
+        .footer-copy { font-size: 0.78rem; color: #555; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="card-header">
-            <div class="icon">&#127891;</div>
-            <h1>Student Performance Predictor</h1>
-            <p class="subtitle">Fill in the details below to predict academic performance</p>
-        </div>
-
-        <form action="/predictdata" method="post">
-
-            <div class="form-group">
-                <label for="gender">Gender</label>
-                <select name="gender" id="gender" required>
-                    <option value="">-- Select gender --</option>
-                    <option value="female">Female</option>
-                    <option value="male">Male</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="race_ethnicity">Race / Ethnicity</label>
-                <select name="race_ethnicity" id="race_ethnicity" required>
-                    <option value="">-- Select group --</option>
-                    <option value="group A">Group A</option>
-                    <option value="group B">Group B</option>
-                    <option value="group C">Group C</option>
-                    <option value="group D">Group D</option>
-                    <option value="group E">Group E</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="parental_level_of_education">Parental Level of Education</label>
-                <select name="parental_level_of_education" id="parental_level_of_education" required>
-                    <option value="">-- Select education --</option>
-                    <option value="some high school">Some High School</option>
-                    <option value="high school">High School</option>
-                    <option value="some college">Some College</option>
-                    <option value="associate's degree">Associate's Degree</option>
-                    <option value="bachelor's degree">Bachelor's Degree</option>
-                    <option value="master's degree">Master's Degree</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="lunch">Lunch Type</label>
-                <select name="lunch" id="lunch" required>
-                    <option value="">-- Select lunch type --</option>
-                    <option value="standard">Standard</option>
-                    <option value="free/reduced">Free / Reduced</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="test_preparation_course">Test Preparation Course</label>
-                <select name="test_preparation_course" id="test_preparation_course" required>
-                    <option value="">-- Select --</option>
-                    <option value="none">None</option>
-                    <option value="completed">Completed</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn-submit">&#9889;&nbsp; Predict Performance</button>
-        </form>
-
-        {% if prediction %}
-        {% set p = prediction | lower %}
-        <div class="result-box result-{{ p if p in ['fail','good','excellent','outstanding'] else 'default' }}">
-            <div class="result-label">Predicted Performance</div>
-            <div class="result-value">
-                {% if p == 'fail' %}&#128577;
-                {% elif p == 'good' %}&#128522;
-                {% elif p == 'excellent' %}&#127775;
-                {% elif p == 'outstanding' %}&#127881;
-                {% else %}&#129300;
-                {% endif %}
-                {{ prediction }}
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">AH</div>
+                <span class="nav-logo-text">Altaf</span>
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/predictdata" class="active">Student Perf.</a>
+                <a href="/maintenance">Maintenance</a>
             </div>
         </div>
-        {% endif %}
+    </nav>
 
-        <a href="/" class="back-link">&#8592; Back to Home</a>
+    <div class="page-wrap">
+        <div class="page-grid">
+
+            <!-- LEFT: Form -->
+            <div>
+                <span class="page-eyebrow reveal">&#127891; Education</span>
+                <h1 class="page-title reveal delay-1">Student Performance<br><span>Predictor</span></h1>
+                <p class="page-sub reveal delay-2">Fill in the student's background details and the model will predict their academic performance level — trained on 10+ ML algorithms.</p>
+
+                <div class="form-card reveal delay-2">
+                    <div class="form-card-top"></div>
+                    <div class="form-card-body">
+                        <form action="/predictdata" method="post">
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select name="gender" id="gender" required>
+                                    <option value="">-- Select gender --</option>
+                                    <option value="female">Female</option>
+                                    <option value="male">Male</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="race_ethnicity">Race / Ethnicity</label>
+                                <select name="race_ethnicity" id="race_ethnicity" required>
+                                    <option value="">-- Select group --</option>
+                                    <option value="group A">Group A</option>
+                                    <option value="group B">Group B</option>
+                                    <option value="group C">Group C</option>
+                                    <option value="group D">Group D</option>
+                                    <option value="group E">Group E</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="parental_level_of_education">Parental Level of Education</label>
+                                <select name="parental_level_of_education" id="parental_level_of_education" required>
+                                    <option value="">-- Select education --</option>
+                                    <option value="some high school">Some High School</option>
+                                    <option value="high school">High School</option>
+                                    <option value="some college">Some College</option>
+                                    <option value="associate's degree">Associate's Degree</option>
+                                    <option value="bachelor's degree">Bachelor's Degree</option>
+                                    <option value="master's degree">Master's Degree</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="lunch">Lunch Type</label>
+                                <select name="lunch" id="lunch" required>
+                                    <option value="">-- Select lunch type --</option>
+                                    <option value="standard">Standard</option>
+                                    <option value="free/reduced">Free / Reduced</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="test_preparation_course">Test Preparation Course</label>
+                                <select name="test_preparation_course" id="test_preparation_course" required>
+                                    <option value="">-- Select --</option>
+                                    <option value="none">None</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-submit">&#9889;&nbsp; Predict Performance</button>
+                        </form>
+
+                        {% if prediction %}
+                        {% set p = prediction | lower %}
+                        <div class="result-box result-{{ p if p in ['fail','good','excellent','outstanding'] else 'default' }}">
+                            <div class="result-label">Predicted Performance</div>
+                            <div class="result-emoji">
+                                {% if p == 'fail' %}&#128577;
+                                {% elif p == 'good' %}&#128522;
+                                {% elif p == 'excellent' %}&#127775;
+                                {% elif p == 'outstanding' %}&#127881;
+                                {% else %}&#129300;{% endif %}
+                            </div>
+                            <div class="result-value">{{ prediction }}</div>
+                        </div>
+                        {% endif %}
+
+                        <a href="/" class="back-link">&#8592; Back to Home</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Sidebar -->
+            <div>
+                <!-- Outcome guide -->
+                <div class="sidebar-card reveal delay-1">
+                    <div class="sidebar-title">&#127919; Prediction Outcomes</div>
+                    <div class="outcome-item">
+                        <span class="outcome-dot dot-fail"></span>
+                        <div><div class="outcome-name">Fail</div><div class="outcome-desc">Below passing threshold across subjects</div></div>
+                    </div>
+                    <div class="outcome-item">
+                        <span class="outcome-dot dot-good"></span>
+                        <div><div class="outcome-name">Good</div><div class="outcome-desc">Meets expectations, solid performance</div></div>
+                    </div>
+                    <div class="outcome-item">
+                        <span class="outcome-dot dot-excellent"></span>
+                        <div><div class="outcome-name">Excellent</div><div class="outcome-desc">High achiever, above-average scores</div></div>
+                    </div>
+                    <div class="outcome-item">
+                        <span class="outcome-dot dot-outstanding"></span>
+                        <div><div class="outcome-name">Outstanding</div><div class="outcome-desc">Top performer, exceptional results</div></div>
+                    </div>
+                </div>
+
+                <!-- Model info -->
+                <div class="sidebar-card reveal delay-2">
+                    <div class="sidebar-title">&#129302; Model Insights</div>
+                    <div class="tip-item">10+ algorithms benchmarked: GradientBoosting, XGBoost, CatBoost, RandomForest and more.</div>
+                    <div class="tip-item">Best performer: GradientBoostingClassifier with ~64% accuracy on unseen data.</div>
+                    <div class="tip-item">Features used: gender, ethnicity, parental education, lunch type, test prep course.</div>
+                </div>
+
+                <!-- Other project -->
+                <div class="sidebar-card reveal delay-3">
+                    <div class="sidebar-title">&#8594; Other Projects</div>
+                    <a href="/maintenance" class="nav-card-link">Predictive Maintenance <span>Try &rarr;</span></a>
+                    <a href="/" class="nav-card-link">View Portfolio <span>&#8599;</span></a>
+                </div>
+            </div>
+
+        </div>
     </div>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <div class="nav-logo-icon">AH</div>
+                <span style="font-size:0.85rem;font-weight:600;color:var(--fg);">MD Altaf Hossain Sunny</span>
+            </div>
+            <p class="footer-copy">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    </script>
 </body>
 </html>

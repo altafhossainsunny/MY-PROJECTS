@@ -1,373 +1,377 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predictive Maintenance</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Predictive Maintenance | Altaf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 30px 20px;
+        :root {
+            --bg: #000; --card: #0a0a0a; --primary: #0ea5e9;
+            --secondary: #1a1a1a; --border: rgba(14,165,233,0.2);
+            --border-dim: rgba(255,255,255,0.06); --muted: #a0a0a0;
+            --fg: #fff; --radius: 0.75rem;
+            --orange: #f97316; --red: #ef4444; --green: #22c55e;
         }
+        *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 99px; }
 
-        .card {
-            background: #1e2a3a;
-            border: 1px solid #2a3f5f;
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 680px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
+        /* NAV */
+        nav { position: sticky; top: 0; z-index: 100; background: rgba(0,0,0,0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 2rem; }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), #2563eb); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 800; color: #000; }
+        .nav-logo-text { font-size: 0.9rem; font-weight: 600; color: var(--fg); }
+        .nav-links { display: flex; gap: 2px; }
+        .nav-links a { padding: 7px 16px; border-radius: 6px; font-size: 0.875rem; color: var(--muted); text-decoration: none; transition: all 0.2s; }
+        .nav-links a:hover { color: var(--fg); background: var(--secondary); }
+        .nav-links a.active { color: var(--orange); background: rgba(249,115,22,0.1); }
 
-        .card-header { text-align: center; margin-bottom: 32px; }
-        .icon { font-size: 3rem; margin-bottom: 10px; }
+        /* REVEAL */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.55s ease, transform 0.55s ease; }
+        .reveal.visible { opacity: 1; transform: none; }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
 
-        h1 { font-size: 1.6rem; font-weight: 700; color: #e0e6f0; margin-bottom: 6px; }
-        .subtitle { color: #6b82a0; font-size: 0.9rem; font-weight: 300; }
+        /* PAGE LAYOUT */
+        .page-wrap { flex: 1; max-width: 1100px; margin: 0 auto; width: 100%; padding: 4rem 2rem; }
+        .page-grid { display: grid; grid-template-columns: 1fr 360px; gap: 3.5rem; align-items: start; }
+        @media (max-width: 900px) { .page-grid { grid-template-columns: 1fr; } }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
+        /* PAGE HEADER */
+        .page-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(249,115,22,0.08); border: 1px solid rgba(249,115,22,0.2); color: var(--orange); padding: 5px 16px; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 1rem; }
+        .page-title { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 800; line-height: 1.15; margin-bottom: 0.75rem; }
+        .page-title span { background: linear-gradient(90deg, var(--orange), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .page-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.8; font-weight: 300; margin-bottom: 2rem; }
 
-        @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
-
+        /* FORM CARD */
+        .form-card { background: var(--card); border: 1px solid var(--border-dim); border-radius: 1rem; overflow: hidden; }
+        .form-card-top { height: 3px; background: linear-gradient(90deg, var(--orange), var(--red)); }
+        .form-card-body { padding: 2rem; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: 1 / -1; }
-
-        label {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: #6b82a0;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .field-desc {
-            font-size: 0.72rem;
-            color: #3a5070;
-            margin-bottom: 6px;
-            font-style: italic;
-        }
-
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 11px 14px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            color: #e0e6f0;
-            background: #0f1923;
-            border: 2px solid #2a3f5f;
-            border-radius: 10px;
+        label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+        .field-desc { font-size: 0.7rem; color: #555; margin-bottom: 6px; font-style: italic; font-weight: 300; }
+        input[type="number"], select {
+            width: 100%; padding: 10px 14px;
+            font-family: 'Inter', sans-serif; font-size: 0.88rem;
+            color: var(--fg); background: var(--secondary);
+            border: 1px solid var(--border-dim); border-radius: 8px;
+            appearance: none; -webkit-appearance: none;
             transition: border-color 0.2s, box-shadow 0.2s;
-            appearance: none;
-            -webkit-appearance: none;
         }
-
         select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b82a0' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 38px;
-            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23f97316' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 13px center;
+            background-color: var(--secondary); padding-right: 34px; cursor: pointer;
         }
+        select option { background: #1a1a1a; color: var(--fg); }
+        input[type="number"]:focus, select:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 3px rgba(249,115,22,0.15); background-color: var(--secondary); }
+        input[type="number"]::placeholder { color: #555; }
+        .range-hint { font-size: 0.66rem; color: #444; margin-top: 4px; font-weight: 300; }
+        .btn-submit { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--orange), var(--red)); color: #fff; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 800; border: none; border-radius: 8px; cursor: pointer; margin-top: 1.5rem; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s; }
+        .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(249,115,22,0.3); }
 
-        select option { background: #0f1923; color: #e0e6f0; }
+        /* RESULT */
+        .result-box { margin-top: 1.5rem; padding: 1.5rem; border-radius: 10px; text-align: center; animation: fadeIn 0.4s ease; }
+        .result-ok   { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.3); }
+        .result-fail { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.3); }
+        .result-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+        .result-value { font-size: 1.5rem; font-weight: 800; margin-bottom: 12px; }
+        .result-ok   .result-value { color: var(--green); }
+        .result-fail .result-value { color: var(--red); }
+        .prob-text { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.3px; margin-bottom: 10px; display: block; }
+        .prob-danger { color: var(--red); }
+        .prob-safe   { color: var(--green); }
+        .prob-bar-track { width: 100%; height: 8px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+        .prob-bar-fill { height: 100%; border-radius: 99px; transition: width 0.9s ease; width: 0; }
+        .fill-danger { background: linear-gradient(90deg, #b91c1c, var(--red)); }
+        .fill-safe   { background: linear-gradient(90deg, #15803d, var(--green)); }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 1.5rem; color: var(--muted); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
+        .back-link:hover { color: var(--orange); }
 
-        input[type="number"]:focus,
-        select:focus {
-            outline: none;
-            border-color: #0f3460;
-            box-shadow: 0 0 0 3px rgba(15,52,96,0.4);
-        }
+        /* SIDEBAR */
+        .sidebar-card { background: var(--card); border: 1px solid var(--border-dim); border-radius: 1rem; padding: 1.75rem; margin-bottom: 1.25rem; }
+        .sidebar-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 1rem; }
+        .sensor-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border-dim); }
+        .sensor-item:last-child { border-bottom: none; }
+        .sensor-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 5px; }
+        .sensor-name { font-size: 0.84rem; font-weight: 600; color: var(--fg); }
+        .sensor-desc { font-size: 0.72rem; color: var(--muted); margin-top: 2px; font-weight: 300; }
+        .tip-item { display: flex; gap: 10px; padding: 8px 0; font-size: 0.82rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+        .tip-item::before { content: '▸'; color: var(--orange); flex-shrink: 0; padding-top: 1px; }
+        .nav-card-link { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 8px; background: var(--secondary); border: 1px solid var(--border-dim); text-decoration: none; color: var(--muted); font-size: 0.85rem; font-weight: 500; transition: all 0.2s; margin-bottom: 8px; }
+        .nav-card-link:hover { border-color: var(--orange); color: var(--orange); }
+        .nav-card-link span { font-size: 0.75rem; opacity: 0.5; }
 
-        input[type="number"]::placeholder { color: #3a5070; }
+        /* FOOTER */
+        footer { border-top: 1px solid var(--border-dim); padding: 1.5rem 2rem; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .footer-logo { display: flex; align-items: center; gap: 10px; }
+        .footer-copy { font-size: 0.78rem; color: #555; }
 
-        .range-hint {
-            font-size: 0.68rem;
-            color: #2a4060;
-            margin-top: 4px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-top: 24px;
-            transition: opacity 0.2s, transform 0.2s;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        .result-box {
-            margin-top: 24px;
-            padding: 22px;
-            border-radius: 12px;
-            text-align: center;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .result-ok   { background: #0d2b1e; border: 2px solid #1a6b3a; color: #4caf7d; }
-        .result-fail { background: #2b0d0d; border: 2px solid #6b1a1a; color: #f44336; }
-
-        .result-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.7;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .result-value { font-size: 1.6rem; font-weight: 800; margin-bottom: 14px; }
-
-        .prob-line { margin-bottom: 10px; }
-
-        .prob-text {
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-
-        .prob-danger { color: #ff6b6b; }
-        .prob-safe   { color: #4caf7d; }
-
-        .prob-bar-track {
-            width: 100%;
-            height: 10px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 99px;
-            overflow: hidden;
-        }
-
-        .prob-bar-fill {
-            height: 100%;
-            border-radius: 99px;
-            transition: width 0.8s ease;
-        }
-
-        .fill-danger { background: linear-gradient(90deg, #c0392b, #ff6b6b); }
-        .fill-safe   { background: linear-gradient(90deg, #1a6b3a, #4caf7d); }
-
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 22px;
-            color: #3a5070;
-            font-size: 0.85rem;
-            text-decoration: none;
-        }
-
-        .back-link:hover { color: #6b82a0; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="card-header">
-            <div class="icon">&#9881;</div>
-            <h1>Predictive Maintenance</h1>
-            <p class="subtitle">Enter sensor readings to predict equipment failure</p>
-        </div>
-
-        <form action="/maintenance" method="post">
-                        <div class="form-grid">
-
-                <div class="form-group">
-                    <label for="footfall">Footfall</label>
-                    <div class="field-desc">Number of people / objects passing by the machine</div>
-                    <input type="number" name="footfall" id="footfall" placeholder="e.g. 22" min="0" max="7300" step="1" required>
-                    <span class="range-hint">Valid range: 0 – 7300 &nbsp;|&nbsp; Typical: 1 – 110</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="tempMode">Temperature Mode</label>
-                    <div class="field-desc">Temperature mode or setting of the machine</div>
-                    <select name="tempMode" id="tempMode" required>
-                        <option value="" disabled selected>Select mode (0–7)</option>
-                        <option value="0">0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="AQ">Air Quality Index (AQ)</label>
-                    <div class="field-desc">Air quality level detected near the machine</div>
-                    <select name="AQ" id="AQ" required>
-                        <option value="" disabled selected>Select AQ level</option>
-                        <option value="1">1 — Very Good</option>
-                        <option value="2">2 — Good</option>
-                        <option value="3">3 — Moderate</option>
-                        <option value="4">4 — Fair</option>
-                        <option value="5">5 — Poor</option>
-                        <option value="6">6 — Very Poor</option>
-                        <option value="7">7 — Hazardous</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="USS">Ultrasonic Sensor (USS)</label>
-                    <div class="field-desc">Proximity measurement from ultrasonic sensor</div>
-                    <select name="USS" id="USS" required>
-                        <option value="" disabled selected>Select USS reading</option>
-                        <option value="1">1 — Very Close</option>
-                        <option value="2">2 — Close</option>
-                        <option value="3">3 — Near</option>
-                        <option value="4">4 — Moderate</option>
-                        <option value="5">5 — Far</option>
-                        <option value="6">6 — Very Far</option>
-                        <option value="7">7 — Out of Range</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="CS">Current Sensor (CS)</label>
-                    <div class="field-desc">Electrical current usage of the machine</div>
-                    <select name="CS" id="CS" required>
-                        <option value="" disabled selected>Select CS reading</option>
-                        <option value="1">1 — Very Low</option>
-                        <option value="2">2 — Low</option>
-                        <option value="3">3 — Below Normal</option>
-                        <option value="4">4 — Normal</option>
-                        <option value="5">5 — Above Normal</option>
-                        <option value="6">6 — High</option>
-                        <option value="7">7 — Very High</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="VOC">Volatile Organic Compounds (VOC)</label>
-                    <div class="field-desc">VOC level detected near the machine</div>
-                    <select name="VOC" id="VOC" required>
-                        <option value="" disabled selected>Select VOC level</option>
-                        <option value="0">0 — None</option>
-                        <option value="1">1 — Very Low</option>
-                        <option value="2">2 — Low</option>
-                        <option value="3">3 — Moderate</option>
-                        <option value="4">4 — High</option>
-                        <option value="5">5 — Very High</option>
-                        <option value="6">6 — Hazardous</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="RP">Rotational Position / RPM (RP)</label>
-                    <div class="field-desc">Revolutions per minute of machine parts</div>
-                    <input type="number" name="RP" id="RP" placeholder="e.g. 44" min="19" max="91" step="1" required>
-                    <span class="range-hint">Valid range: 19 – 91 &nbsp;|&nbsp; Typical: 34 – 58</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="IP">Input Pressure (IP)</label>
-                    <div class="field-desc">Input pressure reading to the machine</div>
-                    <select name="IP" id="IP" required>
-                        <option value="" disabled selected>Select IP reading</option>
-                        <option value="1">1 — Very Low</option>
-                        <option value="2">2 — Low</option>
-                        <option value="3">3 — Below Normal</option>
-                        <option value="4">4 — Normal</option>
-                        <option value="5">5 — Above Normal</option>
-                        <option value="6">6 — High</option>
-                        <option value="7">7 — Very High</option>
-                    </select>
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="Temperature">Operating Temperature (°C)</label>
-                    <div class="field-desc">Current operating temperature of the machine</div>
-                    <select name="Temperature" id="Temperature" required>
-                        <option value="" disabled selected>Select temperature</option>
-                        <option value="1">1 °C</option>
-                        <option value="2">2 °C</option>
-                        <option value="3">3 °C</option>
-                        <option value="4">4 °C</option>
-                        <option value="5">5 °C</option>
-                        <option value="6">6 °C</option>
-                        <option value="7">7 °C</option>
-                        <option value="8">8 °C</option>
-                        <option value="9">9 °C</option>
-                        <option value="10">10 °C</option>
-                        <option value="11">11 °C</option>
-                        <option value="12">12 °C</option>
-                        <option value="13">13 °C</option>
-                        <option value="14">14 °C</option>
-                        <option value="15">15 °C</option>
-                        <option value="16">16 °C</option>
-                        <option value="17">17 °C</option>
-                        <option value="18">18 °C</option>
-                        <option value="19">19 °C</option>
-                        <option value="20">20 °C</option>
-                        <option value="21">21 °C</option>
-                        <option value="22">22 °C</option>
-                        <option value="23">23 °C</option>
-                        <option value="24">24 °C</option>
-                    </select>
-                </div>
-
-            </div>
-
-            <button type="submit" class="btn-submit">&#128269;&nbsp; Analyse Equipment</button>
-        </form>
-
-        {% if prediction %}
-        {% set p = prediction | upper %}
-        {% set is_fail = 'FAIL' in p %}
-        <div class="result-box {{ 'result-fail' if is_fail else 'result-ok' }}">
-            <div class="result-label">Diagnosis</div>
-            <div class="result-value">
-                {% if is_fail %}&#9888;&#65039; FAILURE PREDICTED
-                {% else %}&#9989; NORMAL OPERATION
-                {% endif %}
-            </div>
-            <div class="prob-line">
-                {% if is_fail %}
-                    <span class="prob-text prob-danger">{{ failure_pct }}% chance of failure</span>
-                {% else %}
-                    <span class="prob-text prob-safe">{{ failure_pct }}% chance of failure</span>
-                {% endif %}
-            </div>
-            <div class="prob-bar-track">
-                <div class="prob-bar-fill {{ 'fill-danger' if is_fail else 'fill-safe' }}"
-                     data-width="{{ failure_pct }}"></div>
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">AH</div>
+                <span class="nav-logo-text">Altaf</span>
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/predictdata">Student Perf.</a>
+                <a href="/maintenance" class="active">Maintenance</a>
             </div>
         </div>
-        {% endif %}
+    </nav>
 
-        <a href="/" class="back-link">&#8592; Back to Home</a>
+    <div class="page-wrap">
+        <div class="page-grid">
+
+            <!-- LEFT: Form -->
+            <div>
+                <span class="page-eyebrow reveal">&#9881; Industry</span>
+                <h1 class="page-title reveal delay-1">Predictive<br><span>Maintenance</span></h1>
+                <p class="page-sub reveal delay-2">Enter the 9 sensor readings below and the model will predict whether the equipment is at risk of failure — before it happens.</p>
+
+                <div class="form-card reveal delay-2">
+                    <div class="form-card-top"></div>
+                    <div class="form-card-body">
+                        <form action="/maintenance" method="post">
+                            <div class="form-grid">
+
+                                <div class="form-group">
+                                    <label for="footfall">Footfall</label>
+                                    <div class="field-desc">People / objects passing by</div>
+                                    <input type="number" name="footfall" id="footfall" placeholder="e.g. 22" min="0" max="7300" step="1" required>
+                                    <span class="range-hint">Range: 0 – 7300 &nbsp;|&nbsp; Typical: 1 – 110</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tempMode">Temperature Mode</label>
+                                    <div class="field-desc">Temperature setting (0–7)</div>
+                                    <select name="tempMode" id="tempMode" required>
+                                        <option value="" disabled selected>Select mode</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="AQ">Air Quality Index (AQ)</label>
+                                    <div class="field-desc">Air quality near the machine</div>
+                                    <select name="AQ" id="AQ" required>
+                                        <option value="" disabled selected>Select AQ level</option>
+                                        <option value="1">1 — Very Good</option>
+                                        <option value="2">2 — Good</option>
+                                        <option value="3">3 — Moderate</option>
+                                        <option value="4">4 — Fair</option>
+                                        <option value="5">5 — Poor</option>
+                                        <option value="6">6 — Very Poor</option>
+                                        <option value="7">7 — Hazardous</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="USS">Ultrasonic Sensor (USS)</label>
+                                    <div class="field-desc">Proximity measurement</div>
+                                    <select name="USS" id="USS" required>
+                                        <option value="" disabled selected>Select USS reading</option>
+                                        <option value="1">1 — Very Close</option>
+                                        <option value="2">2 — Close</option>
+                                        <option value="3">3 — Near</option>
+                                        <option value="4">4 — Moderate</option>
+                                        <option value="5">5 — Far</option>
+                                        <option value="6">6 — Very Far</option>
+                                        <option value="7">7 — Out of Range</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="CS">Current Sensor (CS)</label>
+                                    <div class="field-desc">Electrical current usage</div>
+                                    <select name="CS" id="CS" required>
+                                        <option value="" disabled selected>Select CS reading</option>
+                                        <option value="1">1 — Very Low</option>
+                                        <option value="2">2 — Low</option>
+                                        <option value="3">3 — Below Normal</option>
+                                        <option value="4">4 — Normal</option>
+                                        <option value="5">5 — Above Normal</option>
+                                        <option value="6">6 — High</option>
+                                        <option value="7">7 — Very High</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="VOC">VOC Level</label>
+                                    <div class="field-desc">Volatile organic compounds</div>
+                                    <select name="VOC" id="VOC" required>
+                                        <option value="" disabled selected>Select VOC level</option>
+                                        <option value="0">0 — None</option>
+                                        <option value="1">1 — Very Low</option>
+                                        <option value="2">2 — Low</option>
+                                        <option value="3">3 — Moderate</option>
+                                        <option value="4">4 — High</option>
+                                        <option value="5">5 — Very High</option>
+                                        <option value="6">6 — Hazardous</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="RP">Rotational Position (RP)</label>
+                                    <div class="field-desc">Revolutions per minute</div>
+                                    <input type="number" name="RP" id="RP" placeholder="e.g. 44" min="19" max="91" step="1" required>
+                                    <span class="range-hint">Range: 19 – 91 &nbsp;|&nbsp; Typical: 34 – 58</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="IP">Input Pressure (IP)</label>
+                                    <div class="field-desc">Pressure input to machine</div>
+                                    <select name="IP" id="IP" required>
+                                        <option value="" disabled selected>Select IP reading</option>
+                                        <option value="1">1 — Very Low</option>
+                                        <option value="2">2 — Low</option>
+                                        <option value="3">3 — Below Normal</option>
+                                        <option value="4">4 — Normal</option>
+                                        <option value="5">5 — Above Normal</option>
+                                        <option value="6">6 — High</option>
+                                        <option value="7">7 — Very High</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="Temperature">Operating Temperature (°C)</label>
+                                    <div class="field-desc">Current machine operating temperature</div>
+                                    <select name="Temperature" id="Temperature" required>
+                                        <option value="" disabled selected>Select temperature</option>
+                                        <option value="1">1 °C</option>
+                                        <option value="2">2 °C</option>
+                                        <option value="3">3 °C</option>
+                                        <option value="4">4 °C</option>
+                                        <option value="5">5 °C</option>
+                                        <option value="6">6 °C</option>
+                                        <option value="7">7 °C</option>
+                                        <option value="8">8 °C</option>
+                                        <option value="9">9 °C</option>
+                                        <option value="10">10 °C</option>
+                                        <option value="11">11 °C</option>
+                                        <option value="12">12 °C</option>
+                                        <option value="13">13 °C</option>
+                                        <option value="14">14 °C</option>
+                                        <option value="15">15 °C</option>
+                                        <option value="16">16 °C</option>
+                                        <option value="17">17 °C</option>
+                                        <option value="18">18 °C</option>
+                                        <option value="19">19 °C</option>
+                                        <option value="20">20 °C</option>
+                                        <option value="21">21 °C</option>
+                                        <option value="22">22 °C</option>
+                                        <option value="23">23 °C</option>
+                                        <option value="24">24 °C</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <button type="submit" class="btn-submit">&#128269;&nbsp; Analyse Equipment</button>
+                        </form>
+
+                        {% if prediction %}
+                        {% set p = prediction | upper %}
+                        {% set is_fail = 'FAIL' in p %}
+                        <div class="result-box {{ 'result-fail' if is_fail else 'result-ok' }}">
+                            <div class="result-label">Diagnosis</div>
+                            <div class="result-value">
+                                {% if is_fail %}&#9888;&#65039; FAILURE PREDICTED
+                                {% else %}&#9989; NORMAL OPERATION
+                                {% endif %}
+                            </div>
+                            {% if is_fail %}
+                                <span class="prob-text prob-danger">{{ failure_pct }}% chance of failure</span>
+                            {% else %}
+                                <span class="prob-text prob-safe">{{ failure_pct }}% chance of failure</span>
+                            {% endif %}
+                            <div class="prob-bar-track">
+                                <div class="prob-bar-fill {{ 'fill-danger' if is_fail else 'fill-safe' }}"
+                                     data-width="{{ failure_pct }}"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <a href="/" class="back-link">&#8592; Back to Home</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Sidebar -->
+            <div>
+                <!-- Sensors guide -->
+                <div class="sidebar-card reveal delay-1">
+                    <div class="sidebar-title">&#128268; Sensor Inputs</div>
+                    <div class="sensor-item"><span class="sensor-dot"></span><div><div class="sensor-name">Footfall</div><div class="sensor-desc">Pedestrian/object traffic near the machine</div></div></div>
+                    <div class="sensor-item"><span class="sensor-dot"></span><div><div class="sensor-name">Temp Mode &amp; Temperature</div><div class="sensor-desc">Operating temperature settings and actual °C reading</div></div></div>
+                    <div class="sensor-item"><span class="sensor-dot"></span><div><div class="sensor-name">AQ — Air Quality</div><div class="sensor-desc">Particulate &amp; gas levels detected near equipment</div></div></div>
+                    <div class="sensor-item"><span class="sensor-dot"></span><div><div class="sensor-name">USS — Ultrasonic Sensor</div><div class="sensor-desc">Proximity distance via ultrasonic pulse</div></div></div>
+                    <div class="sensor-item"><span class="sensor-dot"></span><div><div class="sensor-name">CS — Current Sensor</div><div class="sensor-desc">Electrical current load reading</div></div></div>
+                    <div class="sensor-item"><span class="sensor-dot"></span><div><div class="sensor-name">VOC — Volatile Organics</div><div class="sensor-desc">Chemical compound concentration in air</div></div></div>
+                    <div class="sensor-item"><span class="sensor-dot"></span><div><div class="sensor-name">RP — Rotational Position</div><div class="sensor-desc">RPM of rotating machine components</div></div></div>
+                    <div class="sensor-item"><span class="sensor-dot"></span><div><div class="sensor-name">IP — Input Pressure</div><div class="sensor-desc">Intake pressure level for the machine</div></div></div>
+                </div>
+
+                <!-- Model info -->
+                <div class="sidebar-card reveal delay-2">
+                    <div class="sidebar-title">&#129302; Model Facts</div>
+                    <div class="tip-item">CatBoost classifier achieves ~88% accuracy on the test set.</div>
+                    <div class="tip-item">Binary classification: Normal Operation vs. Failure Imminent.</div>
+                    <div class="tip-item">Probability score shown as a visual bar after prediction.</div>
+                </div>
+
+                <!-- Other projects -->
+                <div class="sidebar-card reveal delay-3">
+                    <div class="sidebar-title">&#8594; Other Projects</div>
+                    <a href="/predictdata" class="nav-card-link">Student Performance <span>Try &rarr;</span></a>
+                    <a href="/" class="nav-card-link">View Portfolio <span>&#8599;</span></a>
+                </div>
+            </div>
+
+        </div>
     </div>
 
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <div class="nav-logo-icon">AH</div>
+                <span style="font-size:0.85rem;font-weight:600;color:var(--fg);">MD Altaf Hossain Sunny</span>
+            </div>
+            <p class="footer-copy">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+
     <script>
-        document.querySelectorAll('.prob-bar-fill[data-width]').forEach(function(el) {
+        // Scroll reveal
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+        // Probability bar animation
+        document.querySelectorAll('.prob-bar-fill[data-width]').forEach(el => {
             el.style.width = el.getAttribute('data-width') + '%';
         });
     </script>
