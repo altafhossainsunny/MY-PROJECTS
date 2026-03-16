@@ -12,6 +12,8 @@ env/
 env.bak/
 env.example/
 venv/
+venv_netsec/
+venv_news/
 venv.bak/
 venv.example/
 dist/
@@ -60,3 +62,4 @@ instance/
 
 # Cython debug symbols
 cython_debug/
+.conda_envs_dir_test

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Network Security Prediction</title>
+</head>
+<body>
+    <h1>Network Security ML Project</h1>
+    <form method="post" enctype="multipart/form-data">
+        <label for="file">Upload CSV file:</label>
+        <input type="file" name="file" id="file" required>
+        <button type="submit">Predict</button>
+    </form>
+    {% if prediction %}
+        <h2>Prediction Results</h2>
+        <pre>{{ prediction }}</pre>
+    {% endif %}
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+    <hr>
+    <h2>Project Info</h2>
+    <p>This section integrates the NetworkSecurity ML project. Upload your data to get predictions.</p>
+</body>
+</html>

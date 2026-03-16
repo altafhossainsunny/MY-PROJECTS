@@ -78,7 +78,7 @@
         }
         .section-title span {
             background: linear-gradient(90deg, var(--primary), #60a5fa);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .section-sub { color: var(--muted); font-size: 0.95rem; line-height: 1.8; font-weight: 300; max-width: 560px; }
 
@@ -194,8 +194,18 @@
 
         /* ── PROJECTS ── */
         #projects { border-top: 1px solid var(--border-dim); }
-        .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        @media (max-width: 700px) { .projects-grid { grid-template-columns: 1fr; } }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .project-card {
+            background: var(--card); border: 1px solid var(--border-dim);
+            border-radius: var(--radius); overflow: hidden; text-decoration: none;
+            display: block; transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+        }
         .project-card {
             background: var(--card); border: 1px solid var(--border-dim);
             border-radius: var(--radius); overflow: hidden; text-decoration: none;
@@ -309,7 +319,7 @@
         <div class="hero-grid">
             <div>
                 <div class="badge reveal"><span class="badge-dot"></span> Open to Opportunities</div>
-                <h1 class="hero-heading reveal reveal-delay-1">Hi, I'm<br><span style="background:linear-gradient(90deg,var(--primary),#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Altaf Hossain</span></h1>
+                <h1 class="hero-heading reveal reveal-delay-1">Hi, I'm<br><span style="background:linear-gradient(90deg,var(--primary),#60a5fa);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Altaf Hossain</span></h1>
                 <p class="hero-role reveal reveal-delay-2"><strong>Data Scientist</strong> &amp; ML Engineer</p>
                 <p class="hero-bio reveal reveal-delay-2">
                     I'm an AI/ML Developer and student researcher with a bachelor's degree in Data Science. My work centers on machine learning for time&nbsp;series prediction — with applications in flood forecasting, machine failure detection, anomaly detection, NLP &amp; deep learning. I build reproducible pipelines that bridge data science and real-world impact.
@@ -434,18 +444,19 @@
             <button class="filter-btn" data-filter="tool">Tools</button>
         </div>
         <div class="skills-grid">
-            <div class="skill-card reveal" data-cat="language"><span class="skill-icon">&#128013;</span><div><div class="skill-name">Python</div><div class="skill-level">Advanced</div></div></div>
-            <div class="skill-card reveal reveal-delay-1" data-cat="language"><span class="skill-icon">&#128451;</span><div><div class="skill-name">SQL</div><div class="skill-level">Intermediate</div></div></div>
-            <div class="skill-card reveal reveal-delay-2" data-cat="language"><span class="skill-icon">&#127760;</span><div><div class="skill-name">HTML &amp; CSS</div><div class="skill-level">Intermediate</div></div></div>
-            <div class="skill-card reveal reveal-delay-3" data-cat="language"><span class="skill-icon">&#9749;</span><div><div class="skill-name">Java</div><div class="skill-level">Beginner</div></div></div>
-            <div class="skill-card reveal" data-cat="ml"><span class="skill-icon">&#129302;</span><div><div class="skill-name">Machine Learning</div><div class="skill-level">Scikit-learn, XGBoost, CatBoost</div></div></div>
-            <div class="skill-card reveal reveal-delay-1" data-cat="ml"><span class="skill-icon">&#128200;</span><div><div class="skill-name">Time Series</div><div class="skill-level">ARIMA, LSTM, Forecasting</div></div></div>
-            <div class="skill-card reveal reveal-delay-2" data-cat="ml"><span class="skill-icon">&#128172;</span><div><div class="skill-name">NLP</div><div class="skill-level">Text Classification, Embeddings</div></div></div>
-            <div class="skill-card reveal reveal-delay-3" data-cat="ml"><span class="skill-icon">&#129488;</span><div><div class="skill-name">Deep Learning</div><div class="skill-level">Keras, TensorFlow basics</div></div></div>
-            <div class="skill-card reveal" data-cat="tool"><span class="skill-icon">&#128038;</span><div><div class="skill-name">Docker</div><div class="skill-level">Containerization</div></div></div>
-            <div class="skill-card reveal reveal-delay-1" data-cat="tool"><span class="skill-icon">&#128167;</span><div><div class="skill-name">Flask</div><div class="skill-level">REST APIs &amp; Web Apps</div></div></div>
-            <div class="skill-card reveal reveal-delay-2" data-cat="tool"><span class="skill-icon">&#128196;</span><div><div class="skill-name">Pandas &amp; NumPy</div><div class="skill-level">Data Wrangling</div></div></div>
-            <div class="skill-card reveal reveal-delay-3" data-cat="tool"><span class="skill-icon">&#128202;</span><div><div class="skill-name">Matplotlib &amp; Seaborn</div><div class="skill-level">Data Visualization</div></div></div>
+              <div class="skill-card reveal" data-cat="language"><span class="skill-icon">&#128013;</span><div><div class="skill-name">Python</div><div class="skill-level">Advanced</div></div></div>
+              <div class="skill-card reveal reveal-delay-1" data-cat="language"><span class="skill-icon">&#128451;</span><div><div class="skill-name">SQL</div><div class="skill-level">Intermediate</div></div></div>
+              <div class="skill-card reveal reveal-delay-2" data-cat="language"><span class="skill-icon">&#127760;</span><div><div class="skill-name">HTML &amp; CSS</div><div class="skill-level">Intermediate</div></div></div>
+              <div class="skill-card reveal reveal-delay-3" data-cat="language"><span class="skill-icon">&#9749;</span><div><div class="skill-name">Java</div><div class="skill-level">Beginner</div></div></div>
+              <div class="skill-card reveal" data-cat="ml"><span class="skill-icon">&#129302;</span><div><div class="skill-name">Machine Learning</div><div class="skill-level">Scikit-learn, XGBoost, CatBoost</div></div></div>
+              <div class="skill-card reveal reveal-delay-1" data-cat="ml"><span class="skill-icon">&#128200;</span><div><div class="skill-name">Time Series</div><div class="skill-level">ARIMA, LSTM, Forecasting</div></div></div>
+              <div class="skill-card reveal reveal-delay-2" data-cat="ml"><span class="skill-icon">&#128172;</span><div><div class="skill-name">NLP</div><div class="skill-level">Text Classification, Embeddings</div></div></div>
+              <div class="skill-card reveal reveal-delay-3" data-cat="ml"><span class="skill-icon">&#129488;</span><div><div class="skill-name">Deep Learning</div><div class="skill-level">Keras, TensorFlow basics</div></div></div>
+              <div class="skill-card reveal" data-cat="tool"><span class="skill-icon">&#128038;</span><div><div class="skill-name">Docker</div><div class="skill-level">Containerization</div></div></div>
+              <div class="skill-card reveal reveal-delay-1" data-cat="tool"><span class="skill-icon">&#128167;</span><div><div class="skill-name">Flask</div><div class="skill-level">REST APIs &amp; Web Apps</div></div></div>
+              <div class="skill-card reveal reveal-delay-2" data-cat="tool"><span class="skill-icon">&#128196;</span><div><div class="skill-name">Pandas &amp; NumPy</div><div class="skill-level">Data Wrangling</div></div></div>
+              <div class="skill-card reveal reveal-delay-3" data-cat="tool"><span class="skill-icon">&#128202;</span><div><div class="skill-name">Matplotlib &amp; Seaborn</div><div class="skill-level">Data Visualization</div></div></div>
+              <div class="skill-card reveal" data-cat="tool"><span class="skill-icon">&#128187;</span><div><div class="skill-name">MLflow</div><div class="skill-level">Experiment Tracking</div></div></div>
         </div>
     </section>
 
@@ -459,52 +470,100 @@
             <p class="section-sub reveal reveal-delay-2" style="margin:0 auto;">End-to-end ML applications — from data collection and model training to production deployment.</p>
         </div>
         <div class="projects-grid">
+            <!-- Project 1: News Portal -->
+            <a href="https://full-stack-news-portal-1.onrender.com/" target="_blank" class="project-card reveal">
+                <div class="project-top top-orange"></div>
+                <div class="project-body">
+                    <span class="project-cat cat-ind">&#128240; Web App</span>
+                    <h3 class="project-title">Full Stack News Portal</h3>
+                    <p class="project-desc">A modern, full-stack news portal for Bangladesh and global news. Features user auth, real-time updates, and a responsive design.</p>
+                    <div class="project-tech">
+                        <span class="tech-chip">Python</span>
+                        <span class="tech-chip">Full Stack</span>
+                        <span class="tech-chip">Web App</span>
+                        <span class="tech-chip">Render</span>
+                    </div>
+                    <div class="project-footer">
+                        <span class="project-metric">Live &bull; News Portal</span>
+                        <div class="project-links">
+                            <span class="plink plink-demo">Live Demo &#8594;</span>
+                            <span class="plink plink-ghost">GitHub</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Project 2: Student Performance -->
             <a href="/predictdata" class="project-card reveal reveal-delay-1">
                 <div class="project-top top-blue"></div>
                 <div class="project-body">
                     <span class="project-cat cat-edu">&#127891; Education</span>
                     <h3 class="project-title">Student Performance Predictor</h3>
-                    <p class="project-desc">Predicts a student's academic outcome — Fail, Good, Excellent, or Outstanding — based on demographic and socioeconomic factors. Benchmarked 10+ ML algorithms.</p>
+                    <p class="project-desc">Predicts academic outcomes based on demographics and socioeconomic factors. Benchmarked 10+ algorithms with 64% accuracy.</p>
                     <div class="project-tech">
                         <span class="tech-chip">Python</span>
                         <span class="tech-chip">Scikit-learn</span>
                         <span class="tech-chip">XGBoost</span>
-                        <span class="tech-chip">CatBoost</span>
                         <span class="tech-chip">Flask</span>
-                        <span class="tech-chip">Render</span>
                     </div>
                     <div class="project-footer">
-                        <span class="project-metric">GradientBoosting &bull; 64% Acc.</span>
+                        <span class="project-metric">ML &bull; GradientBoosting</span>
                         <div class="project-links">
                             <span class="plink plink-demo">Try It &#8594;</span>
                         </div>
                     </div>
                 </div>
             </a>
+
+            <!-- Project 3: Predictive Maintenance -->
             <a href="/maintenance" class="project-card reveal reveal-delay-2">
                 <div class="project-top top-orange"></div>
                 <div class="project-body">
                     <span class="project-cat cat-ind">&#9881; Industry</span>
                     <h3 class="project-title">Predictive Maintenance System</h3>
-                    <p class="project-desc">Detects equipment failure before it happens using 9 real-time sensor readings: footfall, temperature, air quality, VOC, ultrasonic, current, input pressure and RPM.</p>
+                    <p class="project-desc">Detects equipment failure using 9 real-time sensor readings including footfall, temperature, and RPM with 88% accuracy.</p>
                     <div class="project-tech">
                         <span class="tech-chip">Python</span>
                         <span class="tech-chip">CatBoost</span>
-                        <span class="tech-chip">Scikit-learn</span>
-                        <span class="tech-chip">Pandas</span>
                         <span class="tech-chip">Flask</span>
-                        <span class="tech-chip">Seaborn</span>
+                        <span class="tech-chip">Pandas</span>
                     </div>
                     <div class="project-footer">
-                        <span class="project-metric">CatBoost &bull; 88% Acc.</span>
+                        <span class="project-metric">IoT &bull; CatBoost</span>
                         <div class="project-links">
                             <span class="plink plink-demo">Try It &#8594;</span>
                         </div>
                     </div>
                 </div>
             </a>
+
+            <!-- Project 4: Network Security -->
+            <a href="https://github.com/altafhossainsunny/networksecurity.git" target="_blank" class="project-card reveal reveal-delay-3">
+                <div class="project-top top-blue"></div>
+                <div class="project-body">
+                    <span class="project-cat cat-ind" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2);">&#128274; Security</span>
+                    <h3 class="project-title">NetworkSecurity ML Project</h3>
+                    <p class="project-desc">A production-ready pipeline for phishing detection. Features data ingestion, validation, transformation, training, and evaluation with MongoDB & MLflow.</p>
+                    <div class="project-tech">
+                        <span class="tech-chip">Python</span>
+                        <span class="tech-chip">scikit-learn</span>
+                        <span class="tech-chip">FastAPI</span>
+                        <span class="tech-chip">MongoDB</span>
+                        <span class="tech-chip">MLflow</span>
+                    </div>
+                    <div class="project-footer">
+                        <span class="project-metric">MLflow &bull; Docker &bull; Pipeline</span>
+                        <div class="project-links">
+                            <span class="plink plink-demo">Learn More &#8594;</span>
+                            <span class="plink plink-ghost">GitHub</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
-        <p style="text-align:center; color:var(--muted); font-size:0.85rem; margin-top:2rem;" class="reveal">More projects coming soon &mdash; <a href="https://github.com/altafhossainsunny" target="_blank" style="color:var(--primary); text-decoration:none;">follow on GitHub</a></p>
+        <div style="margin-top:3rem; text-align:center;">
+            <p style="color:var(--muted); font-size:0.85rem;" class="reveal">More projects coming soon &mdash; <a href="https://github.com/altafhossainsunny" target="_blank" style="color:var(--primary); text-decoration:none;">follow on GitHub</a></p>
+        </div>
     </section>
 
     <div class="divider-glow"></div>
