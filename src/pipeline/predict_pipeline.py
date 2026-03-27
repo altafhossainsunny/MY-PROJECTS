@@ -144,10 +144,10 @@ class SpamHamPredictPipeline:
 
             cleaned   = _preprocess_message(message)
             features  = vectorizer.transform([cleaned])
-            pred      = model.predict(features)
             proba     = model.predict_proba(features)       # shape (1, 2)
             spam_pct  = round(float(proba[0][1]) * 100, 1)
-            label     = 'SPAM' if int(pred[0]) == 1 else 'HAM'
+            # Use probability threshold instead of model label
+            label     = 'SPAM' if spam_pct > 50 else 'HAM'
             return label, spam_pct
 
         except Exception as e:
