@@ -18,6 +18,7 @@ venv.bak/
 venv.example/
 dist/
 build/
+env_my_project/
 *.egg-info/
 
 # Installer logs

@@ -1,10 +1,12 @@
 flask==3.0.3
 gunicorn==21.2.0
 pandas==2.2.2
-numpy==1.24.4
+numpy==1.26.4
 scikit-learn==1.3.2
 catboost==1.2.10
 lightgbm==4.5.0
+XGBoost
+lightgbm
 joblib==1.4.2
 dill==0.4.0
 imbalanced-learn==0.12.4
@@ -14,3 +16,7 @@ Jinja2==3.1.6
 itsdangerous==2.2.0
 Werkzeug==3.0.3
 click==8.1.8
+nltk
+dagshub
+mlflow
+-e .

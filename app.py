@@ -60,6 +60,21 @@ def maintenance():
 
         return render_template('maintenance.html', prediction=prediction, failure_pct=failure_pct)
     
+@app.route("/spamham", methods=['GET', 'POST'])
+def spam_ham():
+    if request.method == "GET":
+        return render_template('spamham.html')
+    else:
+        from src.pipeline.predict_pipeline import SpamHamPredictPipeline
+
+        message  = request.form.get('message', '')
+        pipeline = SpamHamPredictPipeline()
+        prediction, spam_pct = pipeline.predict(message)
+
+        return render_template('spamham.html',
+                               prediction=prediction,
+                               spam_pct=spam_pct,
+                               message=message)
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=False)
-

@@ -85,3 +85,75 @@ class MaintenanceData:
             'IP':          float(self.IP),
             'Temperature': float(self.Temperature),
         }])
+
+
+# ── Spam / Ham ────────────────────────────────────────────────────────────────
+
+import re
+import string
+import nltk
+from nltk.corpus import stopwords, wordnet
+from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.stem import WordNetLemmatizer
+from nltk import pos_tag
+
+# Ensure NLTK data is available (downloads are no-ops if already present)
+for _pkg in ('punkt', 'punkt_tab', 'wordnet', 'omw-1.4',
+             'stopwords', 'averaged_perceptron_tagger_eng'):
+    nltk.download(_pkg, quiet=True)
+
+_stop       = set(stopwords.words('english'))
+_lemmatizer = WordNetLemmatizer()
+
+
+def _get_wordnet_pos(tag: str):
+    if tag.startswith('J'):
+        return wordnet.ADJ
+    elif tag.startswith('V'):
+        return wordnet.VERB
+    elif tag.startswith('R'):
+        return wordnet.ADV
+    else:
+        return wordnet.NOUN
+
+
+def _preprocess_message(text: str) -> str:
+    """Reproduce the notebook's sentence_to_lemmatized_sentence for a single message."""
+    text = text.lower()
+    text = re.sub(r'[^a-zA-Z]', ' ', text)
+    sentences = sent_tokenize(text)
+    processed = []
+    for sent in sentences:
+        words = word_tokenize(sent)
+        words = [w for w in words if w not in _stop and w not in string.punctuation]
+        tagged = pos_tag(words)
+        words  = [_lemmatizer.lemmatize(w, _get_wordnet_pos(t)) for w, t in tagged]
+        processed.append(' '.join(words))
+    return ' '.join(processed)
+
+
+class SpamHamPredictPipeline:
+    def __init__(self):
+        self.model_path     = os.path.join('artifacts', 'spam_model.pkl')
+        self.vectorizer_path = os.path.join('artifacts', 'spam_tfidf.pkl')
+
+    def predict(self, message: str):
+        try:
+            model      = joblib.load(self.model_path)
+            vectorizer = joblib.load(self.vectorizer_path)
+
+            cleaned   = _preprocess_message(message)
+            features  = vectorizer.transform([cleaned])
+            pred      = model.predict(features)
+            proba     = model.predict_proba(features)       # shape (1, 2)
+            spam_pct  = round(float(proba[0][1]) * 100, 1)
+            label     = 'SPAM' if int(pred[0]) == 1 else 'HAM'
+            return label, spam_pct
+
+        except Exception as e:
+            raise CustomException(e, sys)
+
+
+class SpamHamData:
+    def __init__(self, message: str):
+        self.message = message

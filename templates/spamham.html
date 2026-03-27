@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam / Ham Detector | Altaf</title>
+    <link rel="icon" type="image/png" href="/static/images/fevicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000; --card: #0a0a0a; --primary: #8b5cf6;
+            --secondary: #1a1a1a; --border: rgba(139,92,246,0.2);
+            --border-dim: rgba(255,255,255,0.06); --muted: #a0a0a0;
+            --fg: #fff; --radius: 0.75rem;
+            --violet: #8b5cf6; --indigo: #6366f1; --red: #ef4444; --green: #22c55e;
+        }
+        *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--violet); border-radius: 99px; }
+
+        /* NAV */
+        nav { position: sticky; top: 0; z-index: 100; background: rgba(0,0,0,0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 2rem; }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--violet), var(--indigo)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 800; color: #fff; }
+        .nav-logo-text { font-size: 0.9rem; font-weight: 600; color: var(--fg); }
+        .nav-links { display: flex; gap: 2px; }
+        .nav-links a { padding: 7px 16px; border-radius: 6px; font-size: 0.875rem; color: var(--muted); text-decoration: none; transition: all 0.2s; }
+        .nav-links a:hover { color: var(--fg); background: var(--secondary); }
+        .nav-links a.active { color: var(--violet); background: rgba(139,92,246,0.1); }
+
+        /* REVEAL */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.55s ease, transform 0.55s ease; }
+        .reveal.visible { opacity: 1; transform: none; }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+
+        /* PAGE LAYOUT */
+        .page-wrap { flex: 1; max-width: 1100px; margin: 0 auto; width: 100%; padding: 4rem 2rem; }
+        .page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 3.5rem; align-items: start; }
+        @media (max-width: 900px) { .page-grid { grid-template-columns: 1fr; } }
+
+        /* PAGE HEADER */
+        .page-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.25); color: var(--violet); padding: 5px 16px; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 1rem; }
+        .page-title { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 800; line-height: 1.15; margin-bottom: 0.75rem; }
+        .page-title span { background: linear-gradient(90deg, var(--violet), var(--indigo)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .page-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.8; font-weight: 300; margin-bottom: 2rem; }
+
+        /* FORM CARD */
+        .form-card { background: var(--card); border: 1px solid var(--border-dim); border-radius: 1rem; overflow: hidden; }
+        .form-card-top { height: 3px; background: linear-gradient(90deg, var(--violet), var(--indigo)); }
+        .form-card-body { padding: 2rem; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 1.25rem; }
+        label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+        .field-desc { font-size: 0.7rem; color: #555; margin-bottom: 8px; font-style: italic; font-weight: 300; }
+        textarea {
+            width: 100%; padding: 14px;
+            font-family: 'Inter', sans-serif; font-size: 0.9rem;
+            color: var(--fg); background: var(--secondary);
+            border: 1px solid var(--border-dim); border-radius: 8px;
+            resize: vertical; min-height: 140px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            line-height: 1.7;
+        }
+        textarea:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.15); }
+        textarea::placeholder { color: #444; }
+        .char-hint { font-size: 0.66rem; color: #444; margin-top: 4px; text-align: right; }
+        .btn-submit { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--violet), var(--indigo)); color: #fff; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 800; border: none; border-radius: 8px; cursor: pointer; margin-top: 0.5rem; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s; letter-spacing: 0.3px; }
+        .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(139,92,246,0.35); }
+
+        /* RESULT */
+        .result-box { margin-top: 1.5rem; padding: 1.5rem; border-radius: 10px; text-align: center; animation: fadeIn 0.4s ease; }
+        .result-spam { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.3); }
+        .result-ham  { background: rgba(34,197,94,0.06);  border: 1px solid rgba(34,197,94,0.3); }
+        .result-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+        .result-value { font-size: 1.7rem; font-weight: 800; margin-bottom: 10px; letter-spacing: 0.5px; }
+        .result-spam .result-value { color: var(--red); }
+        .result-ham  .result-value { color: var(--green); }
+        .result-emoji { font-size: 2rem; margin-bottom: 6px; display: block; }
+        .prob-text { font-size: 0.88rem; font-weight: 600; letter-spacing: 0.3px; margin-bottom: 10px; display: block; }
+        .prob-danger { color: var(--red); }
+        .prob-safe   { color: var(--green); }
+        .prob-bar-track { width: 100%; height: 8px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; margin-bottom: 8px; }
+        .prob-bar-fill { height: 100%; border-radius: 99px; transition: width 0.9s ease; width: 0; }
+        .fill-danger { background: linear-gradient(90deg, #b91c1c, var(--red)); }
+        .fill-safe   { background: linear-gradient(90deg, #15803d, var(--green)); }
+        .message-echo { margin-top: 1rem; padding: 10px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-dim); border-radius: 8px; font-size: 0.8rem; color: #666; font-style: italic; word-break: break-word; text-align: left; line-height: 1.6; }
+        .message-echo strong { color: #888; font-style: normal; }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 1.5rem; color: var(--muted); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
+        .back-link:hover { color: var(--violet); }
+
+        /* SIDEBAR */
+        .sidebar-card { background: var(--card); border: 1px solid var(--border-dim); border-radius: 1rem; padding: 1.75rem; margin-bottom: 1.25rem; }
+        .sidebar-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 1rem; }
+        .step-item { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border-dim); }
+        .step-item:last-child { border-bottom: none; }
+        .step-num { width: 22px; height: 22px; border-radius: 50%; background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--violet); flex-shrink: 0; margin-top: 2px; }
+        .step-name { font-size: 0.84rem; font-weight: 600; color: var(--fg); }
+        .step-desc { font-size: 0.72rem; color: var(--muted); margin-top: 2px; font-weight: 300; line-height: 1.5; }
+        .tip-item { display: flex; gap: 10px; padding: 8px 0; font-size: 0.82rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+        .tip-item::before { content: '▸'; color: var(--violet); flex-shrink: 0; padding-top: 1px; }
+        .nav-card-link { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 8px; background: var(--secondary); border: 1px solid var(--border-dim); text-decoration: none; color: var(--muted); font-size: 0.85rem; font-weight: 500; transition: all 0.2s; margin-bottom: 8px; }
+        .nav-card-link:hover { border-color: var(--violet); color: var(--violet); }
+        .nav-card-link span { font-size: 0.75rem; opacity: 0.5; }
+
+        /* FOOTER */
+        footer { border-top: 1px solid var(--border-dim); padding: 1.5rem 2rem; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .footer-logo { display: flex; align-items: center; gap: 10px; }
+        .footer-copy { font-size: 0.78rem; color: #555; }
+
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">AH</div>
+                <span class="nav-logo-text">Altaf</span>
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/predictdata">Student Perf.</a>
+                <a href="/maintenance">Maintenance</a>
+                <a href="/spamham" class="active">Spam/Ham</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrap">
+        <div class="page-grid">
+
+            <!-- LEFT: Form -->
+            <div>
+                <span class="page-eyebrow reveal">&#128233; NLP · Classification</span>
+                <h1 class="page-title reveal delay-1">Spam / Ham<br><span>Detector</span></h1>
+                <p class="page-sub reveal delay-2">Paste any SMS or email message below. The model will instantly classify it as <strong>Spam</strong> or <strong>Ham</strong> (legitimate) using a Support Vector Classifier trained on 5,572 real-world messages.</p>
+
+                <div class="form-card reveal delay-2">
+                    <div class="form-card-top"></div>
+                    <div class="form-card-body">
+                        <form action="/spamham" method="post" id="spamhamForm">
+                            <div class="form-group">
+                                <label for="message">Message Text</label>
+                                <div class="field-desc">Paste or type the message you want to classify</div>
+                                <textarea name="message" id="message" placeholder="e.g. Congratulations! You've won a FREE prize. Click here to claim now!" required>{{ message if message else '' }}</textarea>
+                                <div class="char-hint" id="charCount">0 characters</div>
+                            </div>
+
+                            <button type="submit" class="btn-submit" id="submitBtn">&#128270;&nbsp; Classify Message</button>
+                        </form>
+
+                        {% if prediction %}
+                        {% set is_spam = prediction == 'SPAM' %}
+                        <div class="result-box {{ 'result-spam' if is_spam else 'result-ham' }}">
+                            <span class="result-emoji">{{ '&#128534;' if is_spam else '&#9989;' }}</span>
+                            <div class="result-label">Classification Result</div>
+                            <div class="result-value">
+                                {{ '&#9888;&#65039; SPAM DETECTED' if is_spam else '&#10003; HAM — Legitimate' }}
+                            </div>
+                            {% if is_spam %}
+                                <span class="prob-text prob-danger">{{ spam_pct }}% spam confidence</span>
+                            {% else %}
+                                <span class="prob-text prob-safe">{{ spam_pct }}% spam probability (very low)</span>
+                            {% endif %}
+                            <div class="prob-bar-track">
+                                <div class="prob-bar-fill {{ 'fill-danger' if is_spam else 'fill-safe' }}"
+                                     data-width="{{ spam_pct }}"></div>
+                            </div>
+                            {% if message %}
+                            <div class="message-echo"><strong>Analysed:</strong> "{{ message[:200] }}{{ '…' if message|length > 200 else '' }}"</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <a href="/" class="back-link">&#8592; Back to Home</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Sidebar -->
+            <div>
+                <!-- Pipeline steps -->
+                <div class="sidebar-card reveal delay-1">
+                    <div class="sidebar-title">&#9881; How it Works</div>
+                    <div class="step-item">
+                        <div class="step-num">1</div>
+                        <div><div class="step-name">Text Preprocessing</div><div class="step-desc">Lowercase, remove non-alpha chars, tokenize sentences &amp; words.</div></div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">2</div>
+                        <div><div class="step-name">Stopword Removal</div><div class="step-desc">NLTK English stopwords and punctuation stripped out.</div></div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">3</div>
+                        <div><div class="step-name">Lemmatization</div><div class="step-desc">POS-tag every token and lemmatize with WordNetLemmatizer.</div></div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">4</div>
+                        <div><div class="step-name">TF-IDF Vectorization</div><div class="step-desc">Top-1000 unigram + bigram features extracted.</div></div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">5</div>
+                        <div><div class="step-name">SVC Prediction</div><div class="step-desc">Support Vector Classifier outputs Spam (1) or Ham (0).</div></div>
+                    </div>
+                </div>
+
+                <!-- Model facts -->
+                <div class="sidebar-card reveal delay-2">
+                    <div class="sidebar-title">&#129302; Model Facts</div>
+                    <div class="tip-item">Trained on the UCI SMS Spam Collection — 5,572 labelled messages.</div>
+                    <div class="tip-item">SVC with RBF kernel + TF-IDF (max 1,000 features, 1–2 grams).</div>
+                    <div class="tip-item">Achieves &gt;97% precision on the spam class to minimise false positives.</div>
+                    <div class="tip-item">Result confidence shown as an animated probability bar.</div>
+                </div>
+
+                <!-- Other projects -->
+                <div class="sidebar-card reveal delay-3">
+                    <div class="sidebar-title">&#8594; Other Projects</div>
+                    <a href="/predictdata" class="nav-card-link">Student Performance <span>Try &rarr;</span></a>
+                    <a href="/maintenance" class="nav-card-link">Predictive Maintenance <span>Try &rarr;</span></a>
+                    <a href="/" class="nav-card-link">View Portfolio <span>&#8599;</span></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <div class="nav-logo-icon">AH</div>
+                <span style="font-size:0.85rem;font-weight:600;color:var(--fg);">MD Altaf Hossain Sunny</span>
+            </div>
+            <p class="footer-copy">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll reveal
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+        // Probability bar animation
+        document.querySelectorAll('.prob-bar-fill[data-width]').forEach(el => {
+            el.style.width = el.getAttribute('data-width') + '%';
+        });
+
+        // Character counter
+        const textarea = document.getElementById('message');
+        const charCount = document.getElementById('charCount');
+        function updateCount() {
+            charCount.textContent = textarea.value.length + ' characters';
+        }
+        textarea.addEventListener('input', updateCount);
+        updateCount();
+
+        // Button loading state
+        document.getElementById('spamhamForm').addEventListener('submit', function() {
+            const btn = document.getElementById('submitBtn');
+            btn.textContent = '⏳ Analysing…';
+            btn.disabled = true;
+        });
+    </script>
+</body>
+</html>
