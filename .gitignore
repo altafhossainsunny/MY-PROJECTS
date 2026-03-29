@@ -22,6 +22,7 @@ env_my_project/
 *.egg-info/
 *.csv
 vectorizer.joblib
+artifacts/kindle_vectorizer.joblib
 
 # Installer logs
 pip-log.txt

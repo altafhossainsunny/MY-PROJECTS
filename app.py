@@ -76,5 +76,16 @@ def spam_ham():
                                spam_pct=spam_pct,
                                message=message)
 
+@app.route("/kindle-sentiment", methods=['GET', 'POST'])
+def kindle_sentiment():
+    if request.method == "GET":
+        return render_template('kindle.html')
+    else:
+        from src.pipeline.predict_pipeline import KindlePredictPipeline
+        review = request.form.get('review', '')
+        pipeline = KindlePredictPipeline()
+        prediction = pipeline.predict(review)
+        return render_template('kindle.html', prediction=prediction, review=review)
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=False)
