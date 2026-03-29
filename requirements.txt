@@ -20,4 +20,5 @@ nltk
 dagshub
 mlflow
 imblearn
+gdown
 #-e .

@@ -20,6 +20,8 @@ dist/
 build/
 env_my_project/
 *.egg-info/
+*.csv/
+vectorizer.joblib
 
 # Installer logs
 pip-log.txt
