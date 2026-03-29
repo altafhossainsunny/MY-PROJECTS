@@ -20,7 +20,7 @@ dist/
 build/
 env_my_project/
 *.egg-info/
-*.csv/
+*.csv
 vectorizer.joblib
 
 # Installer logs
