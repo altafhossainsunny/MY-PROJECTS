@@ -19,4 +19,5 @@ click==8.1.8
 nltk
 dagshub
 mlflow
--e .
+imblearn
+#-e .
